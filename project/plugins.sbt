@@ -1,0 +1,2 @@
+// speeds up idea refresh
+addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.1")
