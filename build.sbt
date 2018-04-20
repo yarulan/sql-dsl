@@ -2,17 +2,25 @@ import BuildUtil._
 import Deps._
 
 val commonSettings = Seq(
-  organization := "pro.ulan.flashcards",
+  organization := "pro.ulan.sql.dsl",
   scalaVersion := "2.12.4",
-  scalacOptions ++= Seq("-feature", "-language:implicitConversions")
+  scalacOptions ++= Seq("-feature", "-language:implicitConversions", "-language:reflectiveCalls")
 )
 
 lazy val sqlDsl = project.in(file("."))
   .settings(commonSettings: _*)
-  .aggregate(core, codegen, jdbc, tests)
+  .aggregate(core, dsl, codegen, jdbc, example, macros)
 
 lazy val core = project
   .settings(commonSettings: _*)
+  .configure(
+    useFlatDirs,
+    addDeps(sourcecode)
+  )
+
+lazy val dsl = project
+  .settings(commonSettings: _*)
+  .dependsOn(core, macros)
   .configure(
     useFlatDirs,
     addDeps(sourcecode)
@@ -34,10 +42,18 @@ lazy val jdbc = project
     addDeps(scalaTest, h2) % Test,
   )
 
-lazy val tests = project
+lazy val example = project
   .settings(commonSettings: _*)
-  .dependsOn(codegen, jdbc)
+  .dependsOn(dsl, codegen, jdbc)
   .configure(
     useFlatDirs,
     addDeps(scalaTest, h2) % Test,
+  )
+
+lazy val macros = project
+  .settings(commonSettings: _*)
+  .dependsOn(core)
+  .configure(
+    useFlatDirs,
+    addDeps(scalaReflect),
   )

@@ -8,18 +8,18 @@ trait Schema {
   abstract class Table(_name: String) {
     _tables = _tables.:+(this)
 
-    private var _columns = Vector[Column]()
+    private var _columns = Vector[Column[_]]()
 
-    class Column(val name: String) {
+    class Column[T](val name: String) {
       _columns = _columns.:+(this)
     }
 
-    def column[T](implicit name: sourcecode.Name): Column = {
+    def column[T](implicit name: sourcecode.Name): Column[T] = {
       new Column(name.value)
     }
 
     def getName: String = _name
 
-    def columns: Seq[Column] = _columns
+    def columns: Seq[Column[_]] = _columns
   }
 }
