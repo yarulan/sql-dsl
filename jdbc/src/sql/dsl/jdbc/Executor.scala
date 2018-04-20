@@ -13,27 +13,9 @@ trait Executor {
 //    }
 //  }
 
-//  def execute(stmt: InsertStatement[_]): Unit = {
-//    val conn = getConnection
-//    val table = stmt.table
-//    val values = stmt.values
-//    val columns = table.columns
-//    val tableName = stmt.table.name
-//    val args = (values map {
-//      case InsertValueArg.Default => "default"
-//      case _ => "?"
-//    }).mkString(", ")
-//    val jdbcStmt = conn.prepareStatement(s"insert into $tableName values ($args)")
+  def execute(stmt: InsertStatement[_]): Unit = {
+  }
 //
-//    values.collect {
-//      case x: InsertValueArg.Plain[_] => x
-//    }.zipWithIndex.foreach { case (arg, i) =>
-//      jdbcStmt.setObject(i + 1, arg.value)
-//    }
-//
-//    jdbcStmt.executeUpdate()
-//  }
-
   def execute[T <: SelectStatement[_]](stmt: T): T#Result = {
 //    val conn = getConnection
 //    val jdbcStmt = conn.createStatement()

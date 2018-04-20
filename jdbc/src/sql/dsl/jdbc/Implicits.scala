@@ -2,7 +2,7 @@ package sql.dsl.jdbc
 
 import java.sql.Connection
 
-import sql.dsl.{Column, SelectStatement, Table}
+import sql.dsl._
 
 object Implicits extends Implicits
 
@@ -27,6 +27,28 @@ trait Implicits {
         record.set(column.asInstanceOf[Column[Table, Any]], value)
       }
       record.asInstanceOf[R]
+    }
+  }
+
+  implicit class InsertOps[Table <: sql.dsl.Table[Table]](insert: InsertStatement[Table]) {
+    def execute(conn: Connection): Unit = {
+      val table = insert.table
+      val values = insert.values
+      val columns = table.columns
+      val tableName = table.name
+      val args = (values map {
+        case InsertValueArg.Default => "default"
+        case _ => "?"
+      }).mkString(", ")
+      val jdbcStmt = conn.prepareStatement(s"insert into $tableName values ($args)")
+
+      values.collect {
+        case x: InsertValueArg.Plain[_] => x
+      }.zipWithIndex.foreach { case (arg, i) =>
+        jdbcStmt.setObject(i + 1, arg.value)
+      }
+
+      jdbcStmt.executeUpdate()
     }
   }
 

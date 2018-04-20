@@ -22,10 +22,7 @@ object TestSchema {
     }
   }
 
-//  type Users = Users.type
-
   val Users = new Users
-//  object Users extends Users
 
   class Users extends Table[Users] {
     override val name: String = "USERS"
