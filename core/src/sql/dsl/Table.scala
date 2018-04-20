@@ -1,6 +1,7 @@
 package sql.dsl
 
-trait Table[Table <: sql.dsl.Table[Table]] {
+trait Table {
+  type Table <: sql.dsl.Table
   type Record <: sql.dsl.Record[Table]
   type Column[Type] <: sql.dsl.Column[Table, Type]
 

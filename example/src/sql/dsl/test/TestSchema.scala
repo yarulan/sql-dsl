@@ -24,7 +24,8 @@ object TestSchema {
 
   val Users = new Users
 
-  class Users extends Table[Users] {
+  class Users extends Table {
+    override type Table = Users
     override val name: String = "USERS"
     override type Record = User
     override val columns = Seq(User.id, User.name)

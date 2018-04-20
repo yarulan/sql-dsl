@@ -2,7 +2,7 @@ package sql.dsl
 
 import scala.collection.mutable
 
-trait Record[Table <: sql.dsl.Table[Table]] {
+trait Record[Table <: sql.dsl.Table] {
 
   private val values = mutable.Map[Column[Table, _], Any]()
 

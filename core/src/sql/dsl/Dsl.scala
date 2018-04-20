@@ -10,11 +10,11 @@ trait Dsl {
 
 //  def selectFrom[Table <: sql.dsl.Table[Table], C1](table: Table) = SelectFrom(table)
 
-  def from[Table <: sql.dsl.Table[Table]](table: Table) = From(table)
+  def from[Table <: sql.dsl.Table](table: Table) = From(table)
 
 }
 
-case class From[Table <: sql.dsl.Table[Table]](table: Table) {
+case class From[Table <: sql.dsl.Table](table: Table) {
   type Column[U] = sql.dsl.Column[Table, U]
   type SelectStatement = sql.dsl.SelectStatement[Table]
 

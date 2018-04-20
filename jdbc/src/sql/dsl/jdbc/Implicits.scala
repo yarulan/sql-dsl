@@ -8,7 +8,7 @@ object Implicits extends Implicits
 
 trait Implicits {
 
-  implicit class SelectOps[Table <: sql.dsl.Table[Table], R](
+  implicit class SelectOps[Table <: sql.dsl.Table, R](
     val select: SelectStatement[Table] {
       type Result = R
     }
@@ -24,13 +24,13 @@ trait Implicits {
       val record = table.newRecord
       select.columns.zipWithIndex.foreach { case (column, i) =>
         val value = resultSet.getObject(i + 1)
-        record.set(column.asInstanceOf[Column[Table, Any]], value)
+        record.set(column.asInstanceOf[Column[table.Table, Any]], value)
       }
       record.asInstanceOf[R]
     }
   }
 
-  implicit class InsertOps[Table <: sql.dsl.Table[Table]](insert: InsertStatement[Table]) {
+  implicit class InsertOps[Table <: sql.dsl.Table](insert: InsertStatement[Table]) {
     def execute(conn: Connection): Unit = {
       val table = insert.table
       val values = insert.values
