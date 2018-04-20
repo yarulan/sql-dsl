@@ -1,7 +1,5 @@
 package sql.dsl
 
-import sql.dsl.macros.Macros
-
 import scala.language.dynamics
 
 
