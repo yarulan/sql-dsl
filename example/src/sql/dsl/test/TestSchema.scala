@@ -10,21 +10,19 @@ object TestSchema {
   }
 
   object User {
-    val id = new Column[Users, Int](Users, "ID") {
+    val id = new Column[Users, Int](Users, "id") {
       override type Slice = {
         val id: Int
       }
     }
-    val name = new Column[Users, String](Users, "NAME") {
+    val name = new Column[Users, String](Users, "name") {
       override type Slice = {
         val name: String
       }
     }
-
     type Id = {
       val id: Int
     }
-
     type Name = {
       val name: String
     }
@@ -39,16 +37,12 @@ object TestSchema {
       record.asInstanceOf[id.Slice with name.Slice]
     }
   }
-
-  val Users = new Users
-
   class Users extends Table {
     override type Table = Users
-    override val name: String = "USERS"
+    override val name: String = "Users"
     override type Record = User
     override val columns = Seq(User.id, User.name)
     override def newRecord: User = new User
   }
-
-
+  val Users = new Users
 }

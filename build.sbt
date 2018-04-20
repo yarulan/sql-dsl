@@ -31,7 +31,7 @@ lazy val codegen = project
   .dependsOn(core)
   .configure(
     useFlatDirs,
-    addDeps(scalaMeta)
+    addDeps(scalaMeta, sourcecode, scalaReflect)
   )
 
 lazy val jdbc = project
