@@ -7,6 +7,12 @@ import sql.dsl.test.TestDsl._
 import sql.dsl.test.TestSchema._
 import sql.dsl.jdbc._
 
+class Db(conn: Connection) {
+  def createUser(user: User.Name): Unit = {
+    insertInto(Users).values(Default, user.name).execute(conn)
+  }
+}
+
 class Test extends FunSuite with Matchers {
   test("test") {
     val conn = DriverManager.getConnection("jdbc:h2:mem:")
@@ -15,11 +21,17 @@ class Test extends FunSuite with Matchers {
     stmt.execute("create table Users(id int, name varchar);")
     stmt.close()
 
-    insertInto(Users).values(Default, "John").execute(conn)
+    val db = new Db(conn)
+
+//    User(name = "John")
+//    User(id = 1)
+    db.createUser(User(name = "John"))
 
     from(Users).select(User.id).execute(conn).id shouldBe 0
     from(Users).select(User.name).execute(conn).name shouldBe "John"
 
     conn.close()
   }
+
+
 }

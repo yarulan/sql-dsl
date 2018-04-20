@@ -21,13 +21,13 @@ case class From[Table <: sql.dsl.Table](table: Table) {
   private def unsafeCast[U](x: Any): U = x.asInstanceOf[U]
 
   def select[C1](c1: Column[C1]): SelectStatement {
-    type Result = c1.Type
+    type Result = c1.Slice
   } = {
     unsafeCast(SelectStatement(table, Seq(c1)))
   }
 
   def select[C1, C2](c1: Column[C1], c2: Column[C2]): SelectStatement {
-    type Result = c1.Type with c2.Type
+    type Result = c1.Slice with c2.Slice
   } = {
     unsafeCast(SelectStatement(table, Seq(c1, c2)))
   }
