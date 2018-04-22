@@ -1,7 +1,6 @@
 package sql.dsl.test.dsl
 
 import sql.dsl.{Table, Record, Column}
-import sql.dsl.test.dsl.Dsl._
 
 class User extends Record[Users] {
   def id: Int = get(User.id)

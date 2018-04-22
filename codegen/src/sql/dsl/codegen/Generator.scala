@@ -57,14 +57,16 @@ class Generator(
   }
 
   private def genDsl(tables: Seq[Table]): Unit = {
-    stream = writer.getStream(s"Dsl.scala")
+    val packageParts = `package`.split('.')
 
-    emit(s"package ${`package`}\n\n")
+    stream = writer.getStream(s"${packageParts.last}.scala")
+
+    emit(s"package ${packageParts.dropRight(1).mkString(".")}\n\n")
 
     emitln(s"import sql.dsl.{$InsertValueArg, $InsertStatement}")
     emitln()
 
-    emitBlock("object Dsl extends sql.dsl.Dsl {", "}") {
+    emitBlock(s"package object ${packageParts.last} extends sql.dsl.Dsl {", "}") {
       tables.foreach { table =>
         val tableName = table.tableName
         val recordName = table.recordName
@@ -107,7 +109,6 @@ class Generator(
     emit(s"package ${`package`}\n\n")
 
     emitln("import sql.dsl.{Table, Record, Column}")
-    emitln(s"import ${`package`}.Dsl._")
 
     emitln()
 

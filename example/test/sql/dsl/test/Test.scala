@@ -4,7 +4,6 @@ import java.sql.{Connection, DriverManager}
 
 import org.scalatest.{FunSuite, Matchers}
 import sql.dsl.test.dsl._
-import sql.dsl.test.dsl.Dsl._
 import sql.dsl.jdbc._
 
 class Db(conn: Connection) {
