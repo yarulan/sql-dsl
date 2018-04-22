@@ -16,22 +16,30 @@ trait Dsl {
 
 case class From[Table <: sql.dsl.Table](table: Table) {
   type Column[U] = sql.dsl.Column[Table, U]
-  type SelectStatement = sql.dsl.SelectStatement[Table]
 
   private def unsafeCast[U](x: Any): U = x.asInstanceOf[U]
 
-  def select[C1](c1: Column[C1]): SelectStatement {
-    type Result = c1.Slice
+  def select[C1](c1: Column[C1]): SelectStatement[Table, Seq] {
+    type Record = c1.Slice
   } = {
-    unsafeCast(SelectStatement(this, Seq(c1)))
+    unsafeCast(SelectStatement(this, Seq(c1), Where[Seq]()))
   }
 
-  def select[C1, C2](c1: Column[C1], c2: Column[C2]): SelectStatement {
-    type Result = c1.Slice with c2.Slice
+  def select[C1, C2](c1: Column[C1], c2: Column[C2]): SelectStatement[Table, Seq] {
+    type Record = c1.Slice with c2.Slice
   } = {
-    unsafeCast(SelectStatement(this, Seq(c1, c2)))
+    unsafeCast(SelectStatement(this, Seq(c1, c2), Where[Seq]()))
   }
 }
+
+case class Where[Unique[_]]() {
+  type Result[T] = Seq[T]
+}
+
+//sealed trait Unique
+//case object Unique extends Unique
+//trait NotUnique[T] extends Unique
+
 
 //case class SelectFrom[T <: Table](table: T) {
 //  import scala.language.experimental.macros

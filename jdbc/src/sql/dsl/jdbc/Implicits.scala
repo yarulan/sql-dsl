@@ -8,12 +8,12 @@ object Implicits extends Implicits
 
 trait Implicits {
 
-  implicit class SelectOps[Table <: sql.dsl.Table, R](
-    val select: SelectStatement[Table] {
-      type Result = R
+  implicit class SelectOps[Table <: sql.dsl.Table, R, RecordContainer[_]](
+    val select: SelectStatement[Table, RecordContainer] {
+      type Record = R
     }
   ) {
-    def execute(conn: Connection): R = {
+    def execute(conn: Connection): RecordContainer[R] = {
       val jdbcStmt = conn.createStatement()
       val table = select.from.table
       val sColumns = select.columns.map(_.name).mkString(", ")
@@ -26,7 +26,7 @@ trait Implicits {
         val value = resultSet.getObject(i + 1)
         record.set(column.asInstanceOf[Column[table.Table, Any]], value)
       }
-      record.asInstanceOf[R]
+      record.asInstanceOf[RecordContainer[R]]
     }
   }
 

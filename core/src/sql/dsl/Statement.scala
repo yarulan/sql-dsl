@@ -8,9 +8,10 @@ case class InsertStatement[Table <: sql.dsl.Table](
 ) extends Statement {
 }
 
-case class SelectStatement[Table <: sql.dsl.Table](
+case class SelectStatement[Table <: sql.dsl.Table, RecordContainer[_]](
   from: From[Table],
-  columns: Seq[Column[Table, _]]
+  columns: Seq[Column[Table, _]],
+  where: Where[RecordContainer]
 ) extends Statement {
-  type Result
+  type Record
 }

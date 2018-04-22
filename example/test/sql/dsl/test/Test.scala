@@ -26,8 +26,11 @@ class Test extends FunSuite with Matchers {
 //    User(id = 1)
     db.createUser(User(name = "John"))
 
-    from(Users).select(User.id).execute(conn).id shouldBe 0
-    from(Users).select(User.name).execute(conn).name shouldBe "John"
+    import scala.reflect.runtime.universe._
+    from(Users).select(User.id).execute(conn).head
+
+//    from(Users).select(User.id).execute(conn).id shouldBe 0
+//    from(Users).select(User.name).execute(conn).name shouldBe "John"
 
     conn.close()
   }
