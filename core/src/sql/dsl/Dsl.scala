@@ -56,6 +56,12 @@ trait SelectWords[Table <: sql.dsl.Table] {
   } = {
     unsafeCast(SelectStatement(from, Seq(c1, c2), whereOpt))
   }
+
+  def select[C1, C2, C3](c1: Column[C1], c2: Column[C2], c3: Column[C3]): SelectStatement[Table, X] {
+    type Record = c1.Slice with c2.Slice with c3.Slice
+  } = {
+    unsafeCast(SelectStatement(from, Seq(c1, c2, c3), whereOpt))
+  }
 }
 
 //sealed trait Unique

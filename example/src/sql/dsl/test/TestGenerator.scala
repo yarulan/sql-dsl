@@ -1,12 +1,14 @@
 package sql.dsl.test
 
 import java.nio.file.Paths
+import java.util.UUID
 
 import sql.dsl.codegen.{ConsoleWriter, FileSystemWriter, Generator, Table}
 
 object TestGenerator {
   def main(args: Array[String]): Unit = {
     val Users = new Table("Users", "User") {
+      val uuid = column[UUID].unique
       val id = column[Int].unique
       val name = column[String]
     }
