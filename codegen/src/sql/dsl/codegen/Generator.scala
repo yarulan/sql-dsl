@@ -108,9 +108,7 @@ class Generator(
 
     emit(s"package ${`package`}\n\n")
 
-    emitln("import sql.dsl.{Table, Record, Column}")
-
-    emitln()
+    emit("import sql.dsl._\n\n")
 
     emitBlock(s"class $User extends Record[$Users] {", "}") {
       columns.foreach { column =>
@@ -124,11 +122,12 @@ class Generator(
 
     emitBlock(s"object $User {", "}") {
       columns.foreach { column =>
-        val columnName = column.name.camelCased
-        val columnType = column.`type`.toString
-        emitln(s"""val $columnName = new Column[$tableName, $columnType]($tableName, "$columnName") {""")
+        val id = column.name.camelCased
+        val Int = column.`type`.toString
+        val Unique = column.isUnique.getClass.getSimpleName.dropRight(1)
+        emitln(s"""val $id = new Column[$Users, $Int, $Unique]($tableName, "$id", $Unique) {""")
         emitln(s"""  override type Slice = {""")
-        emitln(s"""    val $columnName: $columnType""")
+        emitln(s"""    val $id: $Int""")
         emitln(s"""  }""")
         emitln(s"""}""")
       }

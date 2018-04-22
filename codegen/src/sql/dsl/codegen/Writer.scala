@@ -32,6 +32,10 @@ object ConsoleWriter extends Writer {
   override def init(): Unit = {}
 
   override def getStream(fileName: String): OutputStream = {
-    System.out
+    new OutputStream {
+      override def write(b: Int): Unit = System.out.write(b)
+      override def write(b: Array[Byte]): Unit = System.out.write(b)
+      override def write(b: Array[Byte], off: Int, len: Int): Unit = System.out.write(b, off, len)
+    }
   }
 }
