@@ -2,7 +2,7 @@ package sql.dsl.test
 
 import java.nio.file.Paths
 
-import sql.dsl.codegen.{Generator, Table}
+import sql.dsl.codegen.{FileSystemWriter, Generator, Table}
 
 object TestGenerator {
   def main(args: Array[String]): Unit = {
@@ -10,8 +10,10 @@ object TestGenerator {
       val id = column[Int]
       val name = column[String]
     }
-    val generator = new Generator(Paths.get("./example/src"))
+    val pkg = "sql.dsl.test.dsl"
+    val src = Paths.get("./example/src").resolve(pkg.replace('.', '/'))
+    val generator = new Generator(new FileSystemWriter(src), pkg)
 
-    generator.generate(Users)
+    generator.generate(Seq(Users))
   }
 }
