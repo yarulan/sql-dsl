@@ -1,7 +1,11 @@
 package sql.dsl
 
-case class Column[Table <: sql.dsl.Table, ColumnType](table: Table, name: String) {
+case class Column[Table <: sql.dsl.Table, ColumnType, Unique <: UniqueOrNot](table: Table, name: String, unique: Unique) {
   type Slice
+
+  def ===(value: ColumnType) = {
+    Condition[Table, ColumnType, Unique](this, Operator.Eq, value, unique)
+  }
 
   trait BuilderArg {
     type Slice

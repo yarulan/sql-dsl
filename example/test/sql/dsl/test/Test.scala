@@ -22,33 +22,18 @@ class Test extends FunSuite with Matchers {
 
     val db = new Db(conn)
 
-//    User(name = "John")
-//    User(id = 1)
-    db.createUser(User(name = "John"))
+    insertInto(Users).values(1, "John").execute(conn)
+    insertInto(Users).values(2, "John").execute(conn)
+    insertInto(Users).values(3, "Jane").execute(conn)
 
-    import scala.reflect.runtime.universe._
-    from(Users).select(User.id).execute(conn).head
+    from(Users).where(User.id === 1).select(User.id, User.name).execute(conn).shouldBe(
+      Some(User(id = 1, name = "John"))
+    )
 
-//    from(Users).select(User.id).execute(conn).id shouldBe 0
-//    from(Users).select(User.name).execute(conn).name shouldBe "John"
-
-    conn.close()
-  }
-
-  test("2") {
-    val conn = DriverManager.getConnection("jdbc:h2:mem:")
-
-    var stmt = conn.createStatement()
-    stmt.execute("create table Users(id int, name varchar);")
-    stmt.close()
-
-    insertInto(Users).values(1, "John")
-    insertInto(Users).values(2, "Jane")
-
-//    from(Users).select(User.id, User.name).execute(conn)
+    from(Users).where(User.name === "John").select(User.id, User.name).execute(conn).shouldBe(
+      Seq(User(id = 1, name = "John"), User(id = 2, name = "John"))
+    )
 
     conn.close()
   }
-
-
 }

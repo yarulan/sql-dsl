@@ -14,26 +14,48 @@ trait Dsl {
 
 }
 
-case class From[Table <: sql.dsl.Table](table: Table) {
-  type Column[U] = sql.dsl.Column[Table, U]
+case class From[Table <: sql.dsl.Table](table: Table) extends SelectWords[Table] {
+  override val from: From[Table] = this
+
+  override type X = NotUnique
+
+  def where[ColumnType, Unique <: UniqueOrNot](
+    condition: Condition[Table, ColumnType, Unique]
+  ) = FromWhere(this, condition)
+
+  override val whereOpt: Option[Condition[Table, _, X]] = None
+}
+
+case class FromWhere[Table <: CTable, Unique <: UniqueOrNot](
+  from: From[Table],
+  where: Condition[Table, _, Unique]
+) extends SelectWords[Table] {
+  override type X = Unique
+  override val whereOpt: Option[Condition[Table, _, X]] = Some(where)
+}
+
+trait SelectWords[Table <: sql.dsl.Table] {
+  val from: From[Table]
+
+  type Column[U] = sql.dsl.Column[Table, U, _ <: UniqueOrNot]
+
+  type X <: UniqueOrNot
+
+  val whereOpt: Option[Condition[Table, _, X]]
 
   private def unsafeCast[U](x: Any): U = x.asInstanceOf[U]
 
-  def select[C1](c1: Column[C1]): SelectStatement[Table, Seq] {
+  def select[C1](c1: Column[C1]): SelectStatement[Table, X] {
     type Record = c1.Slice
   } = {
-    unsafeCast(SelectStatement(this, Seq(c1), Where[Seq]()))
+    unsafeCast(SelectStatement(from, Seq(c1), whereOpt))
   }
 
-  def select[C1, C2](c1: Column[C1], c2: Column[C2]): SelectStatement[Table, Seq] {
+  def select[C1, C2](c1: Column[C1], c2: Column[C2]): SelectStatement[Table, X] {
     type Record = c1.Slice with c2.Slice
   } = {
-    unsafeCast(SelectStatement(this, Seq(c1, c2), Where[Seq]()))
+    unsafeCast(SelectStatement(from, Seq(c1, c2), whereOpt))
   }
-}
-
-case class Where[Unique[_]]() {
-  type Result[T] = Seq[T]
 }
 
 //sealed trait Unique

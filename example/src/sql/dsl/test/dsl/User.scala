@@ -1,6 +1,6 @@
 package sql.dsl.test.dsl
 
-import sql.dsl.{Table, Record, Column}
+import sql.dsl._
 
 class User extends Record[Users] {
   def id: Int = get(User.id)
@@ -8,12 +8,12 @@ class User extends Record[Users] {
 }
 
 object User {
-  val id = new Column[Users, Int](Users, "id") {
+  val id = new Column[Users, Int, Unique](Users, "id", Unique) {
     override type Slice = {
       val id: Int
     }
   }
-  val name = new Column[Users, String](Users, "name") {
+  val name = new Column[Users, String, NotUnique](Users, "name", NotUnique) {
     override type Slice = {
       val name: String
     }

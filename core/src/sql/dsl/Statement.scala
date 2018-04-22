@@ -8,10 +8,12 @@ case class InsertStatement[Table <: sql.dsl.Table](
 ) extends Statement {
 }
 
-case class SelectStatement[Table <: sql.dsl.Table, RecordContainer[_]](
+case class SelectStatement[Table <: sql.dsl.Table, Unique <: UniqueOrNot](
   from: From[Table],
-  columns: Seq[Column[Table, _]],
-  where: Where[RecordContainer]
+  columns: Seq[Column[Table, _, _]],
+  where: Option[Condition[Table, _, Unique]]
 ) extends Statement {
   type Record
+
+  def unique: Boolean = where.exists(_.unique.isTrue)
 }
