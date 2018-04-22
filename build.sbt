@@ -4,7 +4,9 @@ import Deps._
 val commonSettings = Seq(
   organization := "pro.ulan.sql.dsl",
   scalaVersion := "2.12.4",
-  scalacOptions ++= Seq("-feature", "-language:implicitConversions", "-language:reflectiveCalls")
+  scalacOptions ++= Seq("-feature", "-deprecation",
+    "-language:implicitConversions", "-language:reflectiveCalls", "-language:higherKinds"
+  )
 )
 
 lazy val sqlDsl = project.in(file("."))
