@@ -9,7 +9,7 @@ case class InsertStatement[Table <: sql.dsl.Table](
 }
 
 case class SelectStatement[Table <: sql.dsl.Table](
-  table: Table,
+  from: From[Table],
   columns: Seq[Column[Table, _]]
 ) extends Statement {
   type Result

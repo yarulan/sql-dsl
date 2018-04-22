@@ -32,5 +32,20 @@ class Test extends FunSuite with Matchers {
     conn.close()
   }
 
+  test("2") {
+    val conn = DriverManager.getConnection("jdbc:h2:mem:")
+
+    var stmt = conn.createStatement()
+    stmt.execute("create table Users(id int, name varchar);")
+    stmt.close()
+
+    insertInto(Users).values(1, "John")
+    insertInto(Users).values(2, "Jane")
+
+//    from(Users).select(User.id, User.name).execute(conn)
+
+    conn.close()
+  }
+
 
 }

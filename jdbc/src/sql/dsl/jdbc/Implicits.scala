@@ -15,7 +15,7 @@ trait Implicits {
   ) {
     def execute(conn: Connection): R = {
       val jdbcStmt = conn.createStatement()
-      val table = select.table
+      val table = select.from.table
       val sColumns = select.columns.map(_.name).mkString(", ")
       val tableName = table.name
       val query = s"select $sColumns from $tableName"
